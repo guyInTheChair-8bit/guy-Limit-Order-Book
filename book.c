@@ -102,22 +102,18 @@ void cancel_order(uint64_t id, int type) {
     if (type == 0) {
         OrderNode* order = buy_orders[id];
 
-        if (order->prev == NULL && order->next == NULL) {
-            //only order
-            buyPriceLists[order->price]->head = NULL;           
-            buyPriceLists[order->price]->tail = NULL;           
-        }
-        else if (order->prev == NULL) {
-            //head
-            buyPriceLists[order->price]->head = order->next;           
-        }
-        else if (order->next == NULL) {
-            //tail
-            buyPriceLists[order->price]->tail = order->prev;
+        if (order->prev != NULL) {
+            order->prev->next = order->next;
         }
         else {
-            order->prev->next = order->next;
+            buyPriceLists[order->price]->head = order->next;
+        }
+
+        if (order->next != NULL) {
             order->next->prev = order->prev;
+        }
+        else {
+            buyPriceLists[order->price]->tail = order->prev;
         }
 
         order->id = 0;
@@ -128,23 +124,19 @@ void cancel_order(uint64_t id, int type) {
     }
     else if (type == 1) {
         OrderNode* order = sell_orders[id];
-
-        if (order->prev == NULL && order->next == NULL) {
-            //only order
-            sellPriceLists[order->price]->head = NULL;           
-            sellPriceLists[order->price]->tail = NULL;           
-        }
-        else if (order->prev == NULL) {
-            //head
-            sellPriceLists[order->price]->head = order->next;           
-        }
-        else if (order->next == NULL) {
-            //tail
-            sellPriceLists[order->price]->tail = order->prev;
+        
+        if (order->prev != NULL) {
+            order->prev->next = order->next;
         }
         else {
-            order->prev->next = order->next;
+            sellPriceLists[order->price]->head = order->next;
+        }
+
+        if (order->next != NULL) {
             order->next->prev = order->prev;
+        }
+        else {
+            sellPriceLists[order->price]->tail = order->prev;
         }
 
         order->id = 0;
